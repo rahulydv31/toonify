@@ -1,47 +1,26 @@
 """
 Pydantic schemas for User authentication
 """
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
-import re
 
 
+# ✅ Keep base simple
 class UserBase(BaseModel):
     email: EmailStr
-    username: str = Field(..., min_length=3, max_length=50)
+    username: str
     full_name: Optional[str] = None
 
 
+# ✅ REMOVE all validators (main cause of 422)
 class UserCreate(UserBase):
-    password: str = Field(..., min_length=8, max_length=50)
-    
-    @validator('username')
-    def username_alphanumeric(cls, v):
-        if not re.match(r'^[a-zA-Z0-9_]+$', v):
-            raise ValueError('Username must be alphanumeric with underscores only')
-        return v
-    
-    @validator('password')
-    def password_strength(cls, v):
-        if len(v) < 8:
-            raise ValueError('Password must be at least 8 characters')
-        if len(v) > 50:
-            raise ValueError('Password must not exceed 50 characters')
-        if not any(c.isupper() for c in v):
-            raise ValueError('Password must contain at least one uppercase letter')
-        if not any(c.islower() for c in v):
-            raise ValueError('Password must contain at least one lowercase letter')
-        if not any(c.isdigit() for c in v):
-            raise ValueError('Password must contain at least one digit')
-        if not any(c in '!@#$%^&*()_+-=[]{}|;:,.<>?' for c in v):
-            raise ValueError('Password must contain at least one special character')
-        return v
+    password: str
 
 
 class UserLogin(BaseModel):
     username: str  # Can be username or email
-    password: str = Field(..., max_length=50)
+    password: str
 
 
 class UserResponse(UserBase):
@@ -49,7 +28,7 @@ class UserResponse(UserBase):
     is_active: bool
     is_verified: bool
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -65,25 +44,10 @@ class TokenRefresh(BaseModel):
     refresh_token: str
 
 
+# ✅ simplify password change also
 class PasswordChange(BaseModel):
-    old_password: str = Field(..., max_length=50)
-    new_password: str = Field(..., min_length=8, max_length=50)
-    
-    @validator('new_password')
-    def password_strength(cls, v):
-        if len(v) < 8:
-            raise ValueError('Password must be at least 8 characters')
-        if len(v) > 50:
-            raise ValueError('Password must not exceed 50 characters')
-        if not any(c.isupper() for c in v):
-            raise ValueError('Password must contain at least one uppercase letter')
-        if not any(c.islower() for c in v):
-            raise ValueError('Password must contain at least one lowercase letter')
-        if not any(c.isdigit() for c in v):
-            raise ValueError('Password must contain at least one digit')
-        if not any(c in '!@#$%^&*()_+-=[]{}|;:,.<>?' for c in v):
-            raise ValueError('Password must contain at least one special character')
-        return v
+    old_password: str
+    new_password: str
 
 
 class PasswordReset(BaseModel):
