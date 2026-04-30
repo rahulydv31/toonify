@@ -9,8 +9,8 @@ from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from app.core.config import settings
-from app.database import get_db
+from backend.app.core.config import settings
+from backend.app.database import get_db
 
 # OAuth2 scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -67,7 +67,7 @@ def decode_token(token: str) -> dict:
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     """Get current authenticated user from token"""
-    from app.models.user import User
+    from backend.app.models.user import User
     
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

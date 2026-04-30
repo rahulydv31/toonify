@@ -5,9 +5,9 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from typing import Optional
 
-from app.models.user import User
-from app.schemas.user import UserCreate, UserLogin
-from app.core.security import (
+from backend.app.models.user import User
+from backend.app.schemas.user import UserCreate, UserLogin
+from backend.app.core.security import (
     get_password_hash,
     verify_password,
     create_access_token,

@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
 
-from app.database import Base
+from backend.app.database import Base
 
 
 class ImageStyle(str, enum.Enum):

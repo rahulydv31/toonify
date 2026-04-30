@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from app.core.config import settings
+from backend.app.core.config import settings
 
 # Create database engine
 is_sqlite = settings.DATABASE_URL.startswith("sqlite")
@@ -49,5 +49,5 @@ def init_db():
     """
     Initialize database tables
     """
-    from app.models import user, image_job  # noqa
+    from backend.app.models import user, image_job  # noqa
     Base.metadata.create_all(bind=engine)

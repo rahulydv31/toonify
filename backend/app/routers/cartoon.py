@@ -9,14 +9,14 @@ import logging
 import io
 from PIL import Image
 
-from app.schemas.image import (
+from backend.app.schemas.image import (
     CartoonClassifyResponse,
     CartoonClassifyError,
     CartoonModelInfo,
     CartoonPrediction,
 )
-from app.ml.cartoon_classifier import get_classifier
-from app.ml.cartoon_generator import get_cartoon_transfer
+from backend.app.ml.cartoon_classifier import get_classifier
+from backend.app.ml.cartoon_generator import get_cartoon_transfer
 
 logger = logging.getLogger(__name__)
 

@@ -9,13 +9,13 @@ from typing import Tuple
 import uuid
 import logging
 
-from app.core.config import settings
+from backend.app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
 # Try to import the DL-based cartoon generator
 try:
-    from app.ml.cartoon_generator import get_cartoon_transfer
+    from backend.app.ml.cartoon_generator import get_cartoon_transfer
     DL_CARTOON_AVAILABLE = True
     logger.info("Deep learning cartoon generator available")
 except ImportError as e:

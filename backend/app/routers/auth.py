@@ -5,8 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app.schemas.user import (
+from backend.app.database import get_db
+from backend.app.schemas.user import (
     UserCreate,
     UserLogin,
     UserResponse,
@@ -15,9 +15,9 @@ from app.schemas.user import (
     PasswordChange,
     MessageResponse,
 )
-from app.services.auth_service import auth_service
-from app.core.security import get_current_user
-from app.models.user import User
+from backend.app.services.auth_service import auth_service
+from backend.app.core.security import get_current_user
+from backend.app.models.user import User
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -89,7 +89,7 @@ async def refresh_token(token_data: TokenRefresh, db: Session = Depends(get_db))
     tokens = auth_service.refresh_tokens(db, token_data.refresh_token)
     
     # Get user for response
-    from app.core.security import decode_token
+    from backend.app.core.security import decode_token
     payload = decode_token(tokens["access_token"])
     user = auth_service.get_user_by_id(db, int(payload.get("sub")))
     

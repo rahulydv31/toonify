@@ -8,10 +8,10 @@ import os
 import uuid
 from datetime import datetime
 
-from app.models.image_job import ImageJob, JobStatus
-from app.models.user import User
-from app.schemas.image import ImageStyleEnum
-from app.core.config import settings
+from backend.app.models.image_job import ImageJob, JobStatus
+from backend.app.models.user import User
+from backend.app.schemas.image import ImageStyleEnum
+from backend.app.core.config import settings
 
 
 class ImageService:

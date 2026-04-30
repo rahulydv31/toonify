@@ -6,8 +6,8 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from app.database import get_db
-from app.schemas.image import (
+from backend.app.database import get_db
+from backend.app.schemas.image import (
     ImageStyleEnum,
     ImageProcessRequest,
     ImageJobResponse,
@@ -17,11 +17,11 @@ from app.schemas.image import (
     StyleInfo,
     StylesListResponse,
 )
-from app.services.image_service import image_service
-from app.image_processing.processor import ImageProcessor
-from app.core.security import get_current_user
-from app.models.user import User
-from app.models.image_job import JobStatus
+from backend.app.services.image_service import image_service
+from backend.app.image_processing.processor import ImageProcessor
+from backend.app.core.security import get_current_user
+from backend.app.models.user import User
+from backend.app.models.image_job import JobStatus
 import os
 
 router = APIRouter(prefix="/images", tags=["Images"])
@@ -124,7 +124,7 @@ async def process_image(
         db.commit()
     
     # Process in background using the DATABASE_URL from settings
-    from app.core.config import settings
+    from backend.app.core.config import settings
     background_tasks.add_task(
         process_image_task,
         db_url=settings.DATABASE_URL,
@@ -141,7 +141,7 @@ def process_image_task(db_url: str, job_id: int):
     """Background task for image processing"""
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
-    from app.models.image_job import ImageJob
+    from backend.app.models.image_job import ImageJob
     import logging
     
     logger = logging.getLogger(__name__)
