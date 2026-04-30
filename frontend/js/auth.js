@@ -57,3 +57,15 @@ async function handleSignIn() {
 function showToast(message, type = 'info') {
     alert(message);
 }
+function switchAuthTab(tab) {
+    const signinForm = document.getElementById('signin-form');
+    const signupForm = document.getElementById('signup-form');
+
+    if (tab === 'signin') {
+        signinForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+    } else {
+        signupForm.classList.remove('hidden');
+        signinForm.classList.add('hidden');
+    }
+}
