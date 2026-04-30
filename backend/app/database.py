@@ -2,41 +2,49 @@
 Database configuration and session management
 """
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 from backend.app.core.config import settings
 
-# Create database engine
+
+# Detect database type
 is_sqlite = settings.DATABASE_URL.startswith("sqlite")
 
-engine_kwargs = {
-    "pool_pre_ping": True,
-}
 
+# Engine configuration
 if is_sqlite:
-    # SQLite specific options for local dev
-    engine_kwargs["connect_args"] = {"check_same_thread": False}
+    # ✅ SQLite (local + Render safe)
+    engine = create_engine(
+        settings.DATABASE_URL,
+        connect_args={"check_same_thread": False},
+        echo=False
+    )
 else:
-    # Apply pooling options for networked DBs like Postgres
-    engine_kwargs.update({
-        "pool_size": 10,
-        "max_overflow": 20,
-    })
+    # ✅ PostgreSQL / production DB
+    engine = create_engine(
+        settings.DATABASE_URL,
+        pool_pre_ping=True,
+        pool_size=10,
+        max_overflow=20,
+        echo=False
+    )
 
-engine = create_engine(settings.DATABASE_URL, **engine_kwargs)
 
-# Create session factory
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Session factory
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
 
-# Base class for models
+
+# Base model
 Base = declarative_base()
 
 
 def get_db():
     """
-    Database session dependency
-    Yields a database session and ensures it's closed after use
+    Dependency to get DB session
     """
     db = SessionLocal()
     try:
@@ -47,7 +55,7 @@ def get_db():
 
 def init_db():
     """
-    Initialize database tables
+    Create database tables
     """
     from backend.app.models import user, image_job  # noqa
     Base.metadata.create_all(bind=engine)
