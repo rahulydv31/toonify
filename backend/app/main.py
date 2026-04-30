@@ -6,11 +6,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.core.config import settings
-from app.database import init_db
-from app.routers.auth import router as auth_router
-from app.routers.images import router as images_router
-from app.routers.cartoon import router as cartoon_router
+from backend.app.core.config import settings
+from backend.app.database import init_db
+from backend.app.routers.auth import router as auth_router
+from backend.app.routers.images import router as images_router
+from backend.app.routers.cartoon import router as cartoon_router
 
 # Create FastAPI app
 app = FastAPI(
