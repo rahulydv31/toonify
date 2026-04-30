@@ -26,11 +26,15 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# ✅ FIXED CORS middleware
+# ✅ FINAL CORS FIX (IMPORTANT)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # allow all origins
-    allow_credentials=False,      # 🔥 IMPORTANT FIX
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+        "https://peppy-horse-28b407.netlify.app"
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -40,20 +44,16 @@ app.include_router(auth_router)
 app.include_router(images_router)
 app.include_router(cartoon_router)
 
-# Mount static files for serving images
+# Mount static files
 app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 app.mount("/processed", StaticFiles(directory=settings.PROCESSED_DIR), name="processed")
 
-
 @app.on_event("startup")
 async def startup_event():
-    """Initialize database on startup"""
     init_db()
-
 
 @app.get("/", tags=["Root"])
 async def root():
-    """Root endpoint"""
     return {
         "name": settings.APP_NAME,
         "version": settings.APP_VERSION,
@@ -61,8 +61,6 @@ async def root():
         "status": "running"
     }
 
-
 @app.get("/health", tags=["Health"])
 async def health_check():
-    """Health check endpoint"""
     return {"status": "healthy"}

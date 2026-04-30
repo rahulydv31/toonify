@@ -1,5 +1,6 @@
-// ✅ IMPORTANT: Local backend URL
-const BASE_URL = "https://toonify-1fjj.onrender.com";
+// ✅ IMPORTANT: Correct backend URL
+const BASE_URL = "https://toonify-1rjj.onrender.com";
+
 
 // Handle Sign In
 async function handleSignIn() {
@@ -24,12 +25,11 @@ async function handleSignIn() {
             body: formData
         });
 
-        // ⚠️ FIX: handle non-JSON safely
-        let data;
+        let data = {};
         try {
             data = await response.json();
-        } catch {
-            data = {};
+        } catch (e) {
+            console.warn("Non-JSON response");
         }
 
         if (response.ok) {
@@ -48,11 +48,12 @@ async function handleSignIn() {
 
     } catch (error) {
         console.error('Sign in error:', error);
-        showToast('Cannot connect to backend (is it running?)', 'error');
+        showToast('Cannot connect to backend', 'error');
     }
 }
 
-// Toast fallback
+
+// Simple toast (fallback)
 function showToast(message, type = 'info') {
     alert(message);
 }
