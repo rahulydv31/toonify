@@ -6,6 +6,7 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -25,11 +26,11 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS middleware
+# ✅ FIXED CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
-    allow_credentials=True,
+    allow_origins=["*"],          # allow all origins
+    allow_credentials=False,      # 🔥 IMPORTANT FIX
     allow_methods=["*"],
     allow_headers=["*"],
 )
